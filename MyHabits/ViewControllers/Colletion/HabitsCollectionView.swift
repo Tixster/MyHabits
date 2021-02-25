@@ -7,7 +7,16 @@
 
 import UIKit
 
+protocol NavDelagate: class {
+    func pushVC(_ vc: UIViewController)
+}
+
+
+
 class HabitsCollectionView: UICollectionView, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource  {
+    
+    weak var navDelegate: NavDelagate?
+    
 
      init() {
         let layout = UICollectionViewFlowLayout()
@@ -19,8 +28,9 @@ class HabitsCollectionView: UICollectionView, UICollectionViewDelegateFlowLayout
         dataSource = self
         backgroundColor = UIColor(named: "WhiteSet")
         showsVerticalScrollIndicator = false
+        
+
     }
-    
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -80,8 +90,11 @@ class HabitsCollectionView: UICollectionView, UICollectionViewDelegateFlowLayout
             cell.checkBox.tintColor = myHabits.color
             cell.countLable.text = "Подряд: "
             
+            
+
             if cell.isChecked == true  {
                 HabitsStore.shared.track(myHabits)
+     
             }
             
             if myHabits.isAlreadyTakenToday {
@@ -90,10 +103,26 @@ class HabitsCollectionView: UICollectionView, UICollectionViewDelegateFlowLayout
                 cell.isChecked = false
                 cell.checkBox.isEnabled = true
             }
- 
+        
             return cell
         }
         
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch indexPath.section {
+        case 0:
+            return
+        default:
+            let myHabits: HabitsStore = .shared
+            let vc = HabitDetailsViewController(date: myHabits)
+          //  let dates = HabitsStore.shared.dates[indexPath.item]
+            navDelegate?.pushVC(vc)
+            
+            vc.title = HabitsStore.shared.habits[indexPath.item].name
+//            vc.dates = dates
+            
+        }
     }
 
 }

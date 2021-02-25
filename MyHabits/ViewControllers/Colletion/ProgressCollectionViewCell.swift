@@ -36,7 +36,7 @@ class ProgressCollectionViewCell: UICollectionViewCell {
     
      let progressView: UIProgressView = {
         let progressView = UIProgressView(progressViewStyle: .bar)
-        progressView.setProgress(HabitsStore.shared.todayProgress, animated: true)
+        progressView.setProgress(HabitsStore.shared.todayProgress, animated: false)
         progressView.tintColor = UIColor(named: "Purple")
         progressView.trackTintColor = .systemGray2
         progressView.layer.masksToBounds = true

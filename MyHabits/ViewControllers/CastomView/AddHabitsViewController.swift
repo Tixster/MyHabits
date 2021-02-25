@@ -7,13 +7,14 @@
 
 import UIKit
 
-final class AddHabitsViewController: UIViewController, CastomViewFuncDelegate {
+class AddHabitsViewController: UIViewController {
     
-    var castView: CastomHabitsView = {
+    private var castViewAdd: CastomHabitsView = {
       let   cast = CastomHabitsView()
        cast.translatesAutoresizingMaskIntoConstraints = false
         return cast
     }()
+    
     
     override func awakeFromNib() {
         
@@ -21,10 +22,10 @@ final class AddHabitsViewController: UIViewController, CastomViewFuncDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        castView.navBarTitle.title = "Создать"
-        castView.funcCastomView =  self
+        castViewAdd.navBarTitle.title = "Создать"
+        castViewAdd.funcCastomView =  self
         view.backgroundColor = .white
-        view.addSubview(castView)
+        view.addSubview(castViewAdd)
         
         setupCastView()
     }
@@ -32,20 +33,25 @@ final class AddHabitsViewController: UIViewController, CastomViewFuncDelegate {
     private func setupCastView(){
     
         NSLayoutConstraint.activate([
-            castView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
-            castView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
+            castViewAdd.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
+            castViewAdd.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
         
         ])
-        castView.setNeedsLayout()
+        castViewAdd.setNeedsLayout()
     }
 
+ 
+    
+    
+}
+
+extension AddHabitsViewController: CastomViewFuncDelegate {
     func colorPicker() {
-        present(castView.picker, animated: true, completion: nil)
+        present(castViewAdd.picker, animated: true, completion: nil)
     }
     
     func tapSaveButton() {
         dismiss(animated: true, completion: nil)
     }
-    
     
 }

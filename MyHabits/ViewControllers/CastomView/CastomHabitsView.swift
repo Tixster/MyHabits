@@ -8,15 +8,17 @@
 import UIKit
 
 
-protocol  CastomViewFuncDelegate {
+protocol  CastomViewFuncDelegate: class {
     func tapSaveButton()
     func colorPicker()
 }
 
 final class CastomHabitsView: UIView, UITextFieldDelegate {
     
-    var funcCastomView: CastomViewFuncDelegate?
+    weak var funcCastomView: CastomViewFuncDelegate?
     let picker = UIColorPickerViewController()
+    var cellCollection = HabitsCollectionView()
+
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var titleTextField: UITextField!
@@ -29,7 +31,13 @@ final class CastomHabitsView: UIView, UITextFieldDelegate {
         }
     }
     @IBOutlet weak var titleTime: UILabel!
-    @IBOutlet weak var timeLabel: UILabel!
+    @IBOutlet weak var timeLabel: UILabel! {
+        didSet {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "HH:mm a"
+            timeLabel.text = "Каждый день в " + formatter.string(from: datePicker.date)
+        }
+    }
     @IBOutlet weak var datePicker: UIDatePicker! {
         didSet {
             datePicker.datePickerMode = .time
@@ -41,11 +49,22 @@ final class CastomHabitsView: UIView, UITextFieldDelegate {
     @IBOutlet weak var cancelButton: UIBarButtonItem!
     @IBOutlet weak var saveButton: UIBarButtonItem!
     @IBAction func saveButtonAction(_ sender: UIBarButtonItem) {
-       // let newHabit = Habit(name: titleTextField.text!, date: datePicker.date, color: colorVIew.backgroundColor!)
-       // let store = HabitsStore.shared
-     //   store.habits.append(newHabit)
+ 
         print("added ")
         funcCastomView?.tapSaveButton()
+        let newHabit = Habit(name: titleTextField.text!, date: datePicker.date, color: colorVIew.backgroundColor!)
+        let store = HabitsStore.shared
+        
+        cellCollection.numberOfItems(inSection: 1)
+
+        store.habits.insert(newHabit, at: 0)
+        cellCollection.insertItems(at: [IndexPath(item: 0, section: 1)])
+        cellCollection.reloadData()
+        cellCollection.collectionViewLayout.invalidateLayout()
+
+        print("added \(store.habits.count)")
+
+
     }
     
     @IBAction func cancelButtonAction(_ sender: UIBarButtonItem) {
@@ -94,7 +113,7 @@ final class CastomHabitsView: UIView, UITextFieldDelegate {
     
     private func getDateFromPicker(){
         let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
+        formatter.dateFormat = "HH:mm a"
         timeLabel.text = "Каждый день в " + formatter.string(from: datePicker.date)
         
     }

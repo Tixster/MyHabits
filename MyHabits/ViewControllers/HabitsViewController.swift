@@ -7,7 +7,10 @@
 
 import UIKit
 
+
 class HabitsViewController: UIViewController {
+    
+
     
     private let habitsColletion = HabitsCollectionView()
     
@@ -28,7 +31,7 @@ class HabitsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        habitsColletion.navDelegate = self
         setupCV()
         view.backgroundColor = .white
     }
@@ -53,5 +56,13 @@ class HabitsViewController: UIViewController {
     }
     
 
+
 }
 
+
+extension HabitsViewController: NavDelagate {
+    func pushVC(_ vc: UIViewController) {
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+}

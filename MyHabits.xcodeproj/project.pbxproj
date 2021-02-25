@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3E75B18825E7112400150904 /* HabitsDetailsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E75B18725E7112400150904 /* HabitsDetailsTableViewCell.swift */; };
 		3E8E0CE025E1898C00D4A1FC /* ProgressCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E8E0CDF25E1898C00D4A1FC /* ProgressCollectionViewCell.swift */; };
 		3E9237AA25E014A400DD3D36 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9237A925E014A400DD3D36 /* AppDelegate.swift */; };
 		3E9237B325E014A700DD3D36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3E9237B225E014A700DD3D36 /* Assets.xcassets */; };
@@ -15,6 +16,8 @@
 		3E9237C825E0175500DD3D36 /* HabitsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9237C725E0175500DD3D36 /* HabitsStore.swift */; };
 		3E9237CD25E02DFB00DD3D36 /* HabitsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9237CC25E02DFB00DD3D36 /* HabitsViewController.swift */; };
 		3E9237D125E02E0B00DD3D36 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9237D025E02E0B00DD3D36 /* InfoViewController.swift */; };
+		3E92908C25E5484000227352 /* HabitDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E92908B25E5484000227352 /* HabitDetailsViewController.swift */; };
+		3E964C0A25E84AD6006F3310 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E964C0925E84AD6006F3310 /* EditViewController.swift */; };
 		3E972E7525E2F9D4007AD872 /* CastomHabitsSetting.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E972E7425E2F9D4007AD872 /* CastomHabitsSetting.xib */; };
 		3E972E7825E2FE0F007AD872 /* CastomHabitsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E972E7725E2FE0F007AD872 /* CastomHabitsView.swift */; };
 		3E972E7B25E301C3007AD872 /* AddHabitsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E972E7A25E301C3007AD872 /* AddHabitsViewController.swift */; };
@@ -23,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3E75B18725E7112400150904 /* HabitsDetailsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitsDetailsTableViewCell.swift; sourceTree = "<group>"; };
 		3E8E0CDF25E1898C00D4A1FC /* ProgressCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressCollectionViewCell.swift; sourceTree = "<group>"; };
 		3E9237A625E014A400DD3D36 /* MyHabits.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyHabits.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E9237A925E014A400DD3D36 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -33,6 +37,8 @@
 		3E9237C725E0175500DD3D36 /* HabitsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitsStore.swift; sourceTree = "<group>"; };
 		3E9237CC25E02DFB00DD3D36 /* HabitsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitsViewController.swift; sourceTree = "<group>"; };
 		3E9237D025E02E0B00DD3D36 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; usesTabs = 0; };
+		3E92908B25E5484000227352 /* HabitDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitDetailsViewController.swift; sourceTree = "<group>"; };
+		3E964C0925E84AD6006F3310 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		3E972E7425E2F9D4007AD872 /* CastomHabitsSetting.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CastomHabitsSetting.xib; sourceTree = "<group>"; };
 		3E972E7725E2FE0F007AD872 /* CastomHabitsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastomHabitsView.swift; sourceTree = "<group>"; };
 		3E972E7A25E301C3007AD872 /* AddHabitsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddHabitsViewController.swift; sourceTree = "<group>"; };
@@ -102,6 +108,7 @@
 		3E9237CB25E02DBB00DD3D36 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				3E964C0825E84A9D006F3310 /* DetailsTable */,
 				3E92908925E540F100227352 /* CastomView */,
 				3E8E0CE325E189B100D4A1FC /* Colletion */,
 				3E9237CC25E02DFB00DD3D36 /* HabitsViewController.swift */,
@@ -116,8 +123,18 @@
 				3E972E7425E2F9D4007AD872 /* CastomHabitsSetting.xib */,
 				3E972E7725E2FE0F007AD872 /* CastomHabitsView.swift */,
 				3E972E7A25E301C3007AD872 /* AddHabitsViewController.swift */,
+				3E964C0925E84AD6006F3310 /* EditViewController.swift */,
 			);
 			path = CastomView;
+			sourceTree = "<group>";
+		};
+		3E964C0825E84A9D006F3310 /* DetailsTable */ = {
+			isa = PBXGroup;
+			children = (
+				3E92908B25E5484000227352 /* HabitDetailsViewController.swift */,
+				3E75B18725E7112400150904 /* HabitsDetailsTableViewCell.swift */,
+			);
+			path = DetailsTable;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -190,10 +207,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3E964C0A25E84AD6006F3310 /* EditViewController.swift in Sources */,
 				3E9237C825E0175500DD3D36 /* HabitsStore.swift in Sources */,
 				3E972E7B25E301C3007AD872 /* AddHabitsViewController.swift in Sources */,
+				3E75B18825E7112400150904 /* HabitsDetailsTableViewCell.swift in Sources */,
 				3E9237C225E0160100DD3D36 /* TabBarController.swift in Sources */,
 				3EBF22B225E1A376001D0F98 /* AddedHabitsCollectionViewCell.swift in Sources */,
+				3E92908C25E5484000227352 /* HabitDetailsViewController.swift in Sources */,
 				3E9237CD25E02DFB00DD3D36 /* HabitsViewController.swift in Sources */,
 				3E8E0CE025E1898C00D4A1FC /* ProgressCollectionViewCell.swift in Sources */,
 				3E9237D125E02E0B00DD3D36 /* InfoViewController.swift in Sources */,
