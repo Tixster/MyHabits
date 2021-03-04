@@ -26,7 +26,7 @@ class ProgressCollectionViewCell: UICollectionViewCell {
     }()
      let precentLable: UILabel = {
         let label = UILabel()
-        label.text = "\(HabitsStore.shared.todayProgress)%"
+        label.text = "\(Int(HabitsStore.shared.todayProgress * 100))%"
         label.font = UIFont.systemFont(ofSize: 13, weight: .semibold)
         label.textColor = .systemGray
         label.translatesAutoresizingMaskIntoConstraints = false

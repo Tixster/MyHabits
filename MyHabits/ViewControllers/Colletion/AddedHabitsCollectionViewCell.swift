@@ -67,17 +67,12 @@ class AddedHabitsCollectionViewCell: UICollectionViewCell {
         setupContetn()
     }
     
-
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    
    
     @objc func tapChecked(){
         isChecked = true
-        
         
                 }
 

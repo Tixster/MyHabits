@@ -9,7 +9,9 @@ import UIKit
 
 class HabitDetailsViewController: UIViewController {
 
-    private let date: HabitsStore
+
+    let date: HabitsStore
+
     
     init(date: HabitsStore) {
         self.date = date
@@ -56,8 +58,15 @@ class HabitDetailsViewController: UIViewController {
     }
     
     @objc private func editHabits(){
-        let vc = EditViewController()
-        navigationController?.present(vc, animated: true)
+         let vc = HabitViewController()
+
+        let navController = UINavigationController(rootViewController: vc)
+ //       guard let indexPath = self.dateTableView.indexPathForSelectedRow else {return print("no")}
+   //     vc.titleTextField.text = date.habits[indexPath.item].name
+     //   vc.colorView.backgroundColor = date.habits[indexPath.item].color
+        vc.title = "Править"
+        vc.deleteButton.isHidden = false
+        self.present(navController, animated: true)
     }
     
     private func setupTableView(){
@@ -72,9 +81,6 @@ class HabitDetailsViewController: UIViewController {
         ])
         
     }
-    
-    
-
 }
 
 
@@ -92,16 +98,15 @@ extension HabitDetailsViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: HabitsDetailsTableViewCell = tableView.dequeueReusableCell(withIdentifier: String(describing: HabitsDetailsTableViewCell.self)) as! HabitsDetailsTableViewCell
         
-        
-        let index = date.dates[indexPath.row]
+        let index = date.trackDateString(forIndex: indexPath.row)
         
         let formatter = DateFormatter()
         formatter.dateFormat = "d MMMM, yyyy"
         formatter.locale = Locale(identifier: "ru_RU")
         
-        cell.textLabel?.text =  "\(formatter.string(from: index))"
+        cell.textLabel?.text =  index
         
-        if date.habit(date.habits[indexPath.row],isTrackedIn: date.habits[indexPath.row].date) == false{
+        if date.habit(date.habits[indexPath.row], isTrackedIn: date.habits[indexPath.row].date) == false{
             cell.accessoryType = .none
 
         } else {
@@ -109,7 +114,6 @@ extension HabitDetailsViewController: UITableViewDelegate, UITableViewDataSource
             cell.tintColor = UIColor(named: "Purple")
         }
         
-    
         return cell
     }
     

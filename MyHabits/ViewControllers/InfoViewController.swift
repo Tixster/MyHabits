@@ -60,16 +60,16 @@ class InfoViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         title = "Информация"
-        stupContent()
+        setupContent()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.prefersLargeTitles = false
-            
+        
     }
  
-    private func stupContent(){
+    private func setupContent(){
         view.addSubview(scrollView)
         scrollView.addSubview(container)
         container.addSubview(labelTitle)
@@ -77,10 +77,10 @@ class InfoViewController: UIViewController {
         
         let constraints = [
             
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             container.topAnchor.constraint(equalTo: scrollView.topAnchor),
             container.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
