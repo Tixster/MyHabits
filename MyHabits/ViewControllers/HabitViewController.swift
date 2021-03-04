@@ -7,22 +7,26 @@
 
 import UIKit
 
-protocol viewControllerDelegate: class {
+protocol AddDelegate: class {
    func addHabit()
-
 }
 
-protocol deleteDelegate: class {
+protocol DeleteDelegate: class {
     func removeHabit()
+}
+
+protocol UpdateDelegate: class {
+    func updateColletion()
 }
 
 class HabitViewController: UIViewController {
     
     private let indexPath: IndexPath?
-    weak var addHabit: viewControllerDelegate?
-    weak var removeHabit: deleteDelegate?
+    weak var addHabit: AddDelegate?
+    weak var removeHabit: DeleteDelegate?
+    weak var updateHabit: UpdateDelegate?
     
-    
+
     init?(index: IndexPath?){
         self .indexPath = index
         super.init(nibName: nil, bundle: nil)
@@ -188,8 +192,12 @@ class HabitViewController: UIViewController {
             if let indexPath = indexPath {
             store.habits.remove(at: indexPath.item)
             store.habits.insert(newHabit, at: indexPath.item)
-            self.dismiss(animated: true)
-            self.navigationController?.popToRootViewController(animated: true)
+                self.dismiss(animated: true) { [weak self] in
+                    guard let self = self else {return}
+                    let vc = HabitDetailsViewController(date: store, index: indexPath)
+                    vc.title = self.titleTextField.text
+                    self.updateHabit?.updateColletion()
+                }
             }
         }
         self.dismiss(animated: true)

@@ -127,7 +127,8 @@ extension HabitDetailsViewController: UITableViewDelegate, UITableViewDataSource
     
 }
 
-extension HabitDetailsViewController: deleteDelegate {
+extension HabitDetailsViewController: DeleteDelegate {
+
     func removeHabit() {
         let vc = HabitsViewController()
         self.navigationController?.popViewController(animated: true)

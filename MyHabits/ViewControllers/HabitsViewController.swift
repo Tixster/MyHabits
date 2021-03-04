@@ -40,10 +40,10 @@ class HabitsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-//        let controller = HabitViewController(index: nil)
-//        guard let vc = controller else { return print("no") }
-//        vc.delegate = self
+        
+        let vc = HabitViewController(index: nil)
+        guard let controller = vc else {  return }
+        controller.updateHabit = self
         
         setupCV()
         view.backgroundColor = .white
@@ -154,25 +154,21 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout, UICollection
             let myHabits: HabitsStore = .shared
             let vc = HabitDetailsViewController(date: myHabits, index: indexPath)
             navigationController?.pushViewController(vc, animated: true)
-            
+
             vc.title = HabitsStore.shared.habits[indexPath.item].name
         }
     }
 
 }
 
-extension HabitsViewController: viewControllerDelegate {
-    func deleteHabit() {
-        
-        self.present(self.navigationController!, animated: true)
+extension HabitsViewController: AddDelegate, UpdateDelegate {
+    func updateColletion() {
         self.collectionView.reloadData()
-        print("added")
+        print("update")
     }
     
-
+    
     func addHabit() {
-        
-       // self.present(self.navigationController!, animated: true)
         self.collectionView.reloadData()
         print("added")
     }
