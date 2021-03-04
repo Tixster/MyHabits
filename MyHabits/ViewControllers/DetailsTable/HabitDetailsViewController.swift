@@ -7,14 +7,18 @@
 
 import UIKit
 
+
+
 class HabitDetailsViewController: UIViewController {
 
 
     let date: HabitsStore
-
+    let indexP: IndexPath
     
-    init(date: HabitsStore) {
+    
+    init(date: HabitsStore, index: IndexPath) {
         self.date = date
+        self.indexP = index
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -53,20 +57,23 @@ class HabitDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
- 
-        
+
     }
     
     @objc private func editHabits(){
-         let vc = HabitViewController()
-
-        let navController = UINavigationController(rootViewController: vc)
- //       guard let indexPath = self.dateTableView.indexPathForSelectedRow else {return print("no")}
-   //     vc.titleTextField.text = date.habits[indexPath.item].name
-     //   vc.colorView.backgroundColor = date.habits[indexPath.item].color
-        vc.title = "Править"
-        vc.deleteButton.isHidden = false
+        let vc = HabitViewController(index: indexP)
+        guard let controller = vc else {return}
+        controller.removeHabit = self
+        
+        let navController = UINavigationController(rootViewController: controller)
+        controller.titleTextField.text = date.habits[indexP.item].name
+        controller.colorView.backgroundColor = date.habits[indexP.item].color
+        controller.datePicker.date = date.habits[indexP.item].date
+        
+        controller.title = "Править"
+        controller.deleteButton.isHidden = false
         self.present(navController, animated: true)
+
     }
     
     private func setupTableView(){
@@ -98,15 +105,15 @@ extension HabitDetailsViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: HabitsDetailsTableViewCell = tableView.dequeueReusableCell(withIdentifier: String(describing: HabitsDetailsTableViewCell.self)) as! HabitsDetailsTableViewCell
         
-        let index = date.trackDateString(forIndex: indexPath.row)
-        
+        let indexCheck = date.trackDateString(forIndex: indexPath.row)
+
         let formatter = DateFormatter()
         formatter.dateFormat = "d MMMM, yyyy"
         formatter.locale = Locale(identifier: "ru_RU")
         
-        cell.textLabel?.text =  index
+        cell.textLabel?.text =  indexCheck
         
-        if date.habit(date.habits[indexPath.row], isTrackedIn: date.habits[indexPath.row].date) == false{
+        if date.habit(date.habits[indexP.row], isTrackedIn: date.habits[indexP.row].date)  == false{
             cell.accessoryType = .none
 
         } else {
@@ -116,6 +123,19 @@ extension HabitDetailsViewController: UITableViewDelegate, UITableViewDataSource
         
         return cell
     }
+    
+    
+}
+
+extension HabitDetailsViewController: deleteDelegate {
+    func removeHabit() {
+        let vc = HabitsViewController()
+        self.navigationController?.popViewController(animated: true)
+        vc.collectionView.reloadData()
+        print("delete")
+    }
+    
+
     
     
 }

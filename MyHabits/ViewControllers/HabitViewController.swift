@@ -7,7 +7,31 @@
 
 import UIKit
 
+protocol viewControllerDelegate: class {
+   func addHabit()
+
+}
+
+protocol deleteDelegate: class {
+    func removeHabit()
+}
+
 class HabitViewController: UIViewController {
+    
+    private let indexPath: IndexPath?
+    weak var addHabit: viewControllerDelegate?
+    weak var removeHabit: deleteDelegate?
+    
+    
+    init?(index: IndexPath?){
+        self .indexPath = index
+        super.init(nibName: nil, bundle: nil)
+
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -112,6 +136,11 @@ class HabitViewController: UIViewController {
 
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+ 
+    }
+    
     @objc private func selectColor(){
         picker.supportsAlpha = true
         picker.selectedColor = colorView.backgroundColor!
@@ -123,19 +152,24 @@ class HabitViewController: UIViewController {
         getDateFromPicker()
     }
     
-    @objc private func deleteHabit(){
-        let allertController = UIAlertController(title: "Удалить привычку", message: "Вы хотите удалить привычку?", preferredStyle: .alert)
+    @objc func deleteHabit(){
+        guard let nameHabit = titleTextField.text else {return}
+        let allertController = UIAlertController(title: "Удалить привычку", message: "Вы хотите удалить привычку \"\(nameHabit)\"?", preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "Отмена", style: .cancel) { _ in
             print("Отмена") }
         let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { [weak self] _ in
             guard let self = self else {return}
-            self.dismiss(animated: true)
+            guard let index = self.indexPath else {return}
+            let habit = HabitsStore.shared
+            habit.habits.remove(at: index.item)
+            self.dismiss(animated: true){ [weak self] in
+                guard let self = self else {return}
+                self.removeHabit?.removeHabit()
+            }
         }
-        
         present(allertController, animated: true, completion: nil)
         allertController.addAction(cancelAction)
         allertController.addAction(deleteAction)
-        
     }
     
     private func getDateFromPicker(){
@@ -148,14 +182,18 @@ class HabitViewController: UIViewController {
         let newHabit = Habit(name: titleTextField.text!, date: datePicker.date, color: colorView.backgroundColor!)
         let store = HabitsStore.shared
         
+        if indexPath == nil {
         store.habits.insert(newHabit, at: 0)
-     
-        if let rd = reload {
-            rd.reloadCollection()
+        } else {
+            if let indexPath = indexPath {
+            store.habits.remove(at: indexPath.item)
+            store.habits.insert(newHabit, at: indexPath.item)
+            self.dismiss(animated: true)
+            self.navigationController?.popToRootViewController(animated: true)
+            }
         }
-        self.dismiss(animated: true) 
-        
-        print("added")
+        self.dismiss(animated: true)
+        addHabit?.addHabit()
     }
     
     @objc private func cancelHabits(){

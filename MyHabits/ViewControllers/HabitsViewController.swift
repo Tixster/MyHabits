@@ -41,6 +41,10 @@ class HabitsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+//        let controller = HabitViewController(index: nil)
+//        guard let vc = controller else { return print("no") }
+//        vc.delegate = self
+        
         setupCV()
         view.backgroundColor = .white
     }
@@ -58,10 +62,12 @@ class HabitsViewController: UIViewController {
     }
     
     @objc private func addHabits(){
-        let vc = HabitViewController()
-        let nav = UINavigationController(rootViewController: vc)
+        let vc = HabitViewController(index: nil)
+        guard let controller = vc else {  return }
+        controller.addHabit = self
+        let nav = UINavigationController(rootViewController: controller)
         self.present(nav, animated: true, completion: nil)
-        vc.title = "Создать"
+        controller.title = "Создать"
  
     }
     
@@ -146,7 +152,7 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout, UICollection
             return
         default:
             let myHabits: HabitsStore = .shared
-            let vc = HabitDetailsViewController(date: myHabits)
+            let vc = HabitDetailsViewController(date: myHabits, index: indexPath)
             navigationController?.pushViewController(vc, animated: true)
             
             vc.title = HabitsStore.shared.habits[indexPath.item].name
@@ -155,3 +161,20 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout, UICollection
 
 }
 
+extension HabitsViewController: viewControllerDelegate {
+    func deleteHabit() {
+        
+        self.present(self.navigationController!, animated: true)
+        self.collectionView.reloadData()
+        print("added")
+    }
+    
+
+    func addHabit() {
+        
+       // self.present(self.navigationController!, animated: true)
+        self.collectionView.reloadData()
+        print("added")
+    }
+    
+}
