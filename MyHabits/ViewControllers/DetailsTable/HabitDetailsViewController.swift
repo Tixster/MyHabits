@@ -45,6 +45,8 @@ class HabitDetailsViewController: UIViewController {
         navigationItem.rightBarButtonItem = editHabitsButton
         
         navigationController?.navigationBar.tintColor = UIColor(named: "Purple")
+        
+
 
     }
     override func viewWillDisappear(_ animated: Bool) {
@@ -113,7 +115,7 @@ extension HabitDetailsViewController: UITableViewDelegate, UITableViewDataSource
         
         cell.textLabel?.text =  indexCheck
         
-        if date.habit(date.habits[indexP.row], isTrackedIn: date.habits[indexP.row].date)  == false{
+        if date.habit(date.habits[indexP.row], isTrackedIn: date.habits[indexP.row].date)  == false{ // Если передаю обычный indexPath, приложение крашится
             cell.accessoryType = .none
 
         } else {

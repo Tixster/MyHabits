@@ -142,7 +142,10 @@ class HabitViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
- 
+        if let indexPath = indexPath {
+        let vc = HabitDetailsViewController(date: HabitsStore.shared, index: indexPath)
+        vc.title = self.titleTextField.text
+        }
     }
     
     @objc private func selectColor(){
@@ -194,8 +197,7 @@ class HabitViewController: UIViewController {
             store.habits.insert(newHabit, at: indexPath.item)
                 self.dismiss(animated: true) { [weak self] in
                     guard let self = self else {return}
-                    let vc = HabitDetailsViewController(date: store, index: indexPath)
-                    vc.title = self.titleTextField.text
+
                     self.updateHabit?.updateColletion()
                 }
             }
