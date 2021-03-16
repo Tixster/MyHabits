@@ -8,7 +8,8 @@
 import UIKit
 
 class AddedHabitsCollectionViewCell: UICollectionViewCell {
- 
+    
+    var delegateUpdate: UpdateDelegate?
     
     var isChecked = false {
         didSet {
@@ -65,15 +66,26 @@ class AddedHabitsCollectionViewCell: UICollectionViewCell {
         contentView.layer.masksToBounds = true
         contentView.layer.cornerRadius = 8
         setupContetn()
+        
+        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
    
+    func setupCellHabit(habits: HabitsStore, index: IndexPath){
+        let habit = habits.habits[index.item]
+        titleLable.text = habit.name
+        titleLable.textColor = habit.color
+        dateLable.text = habit.dateString
+        checkBox.tintColor = habit.color
+        countLable.text = "Подряд: "
+    }
+    
     @objc func tapChecked(){
         isChecked = true
-        
+        self.delegateUpdate?.updateColletion()
                 }
 
     private func setupContetn(){

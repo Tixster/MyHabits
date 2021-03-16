@@ -131,10 +131,10 @@ class HabitViewController: UIViewController {
         
         let saveHabitsButton =  UIBarButtonItem.init(title: "Сохранить", style: .done, target: self, action: #selector(saveHabits))
         let cancelHabitsButton =  UIBarButtonItem.init(title: "Отменить", style: .done, target: self, action: #selector(cancelHabits))
-        
+
         navigationItem.rightBarButtonItem = saveHabitsButton
         saveHabitsButton.tintColor = UIColor(named: "Purple")
-        
+
         navigationItem.leftBarButtonItem = cancelHabitsButton
         cancelHabitsButton.tintColor = UIColor(named: "Purple")
 
@@ -193,8 +193,10 @@ class HabitViewController: UIViewController {
         store.habits.insert(newHabit, at: 0)
         } else {
             if let indexPath = indexPath {
-            store.habits.remove(at: indexPath.item)
-            store.habits.insert(newHabit, at: indexPath.item)
+                store.habits[indexPath.item].name = titleTextField.text!
+                store.habits[indexPath.item].date = datePicker.date
+                store.habits[indexPath.item].color = colorView.backgroundColor!
+                print("Edit")
                 self.dismiss(animated: true) { [weak self] in
                     guard let self = self else {return}
 

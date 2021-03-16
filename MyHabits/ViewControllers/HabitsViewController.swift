@@ -9,6 +9,8 @@ import UIKit
 
 class HabitsViewController: UIViewController {
 
+    private let myHabits: HabitsStore = .shared
+    
      lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collect = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -114,27 +116,29 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout, UICollection
         switch indexPath.section {
         case 0:
             let cell: ProgressCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: ProgressCollectionViewCell.self), for: indexPath) as! ProgressCollectionViewCell
-                collectionView.reloadItems(at: [indexPath])
+                
 
             return cell
         default:
             let cell: AddedHabitsCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: AddedHabitsCollectionViewCell.self), for: indexPath) as! AddedHabitsCollectionViewCell
-            let myHabits = HabitsStore.shared.habits[indexPath.item]
+            let habit = myHabits.habits[indexPath.item]
             
+            cell.setupCellHabit(habits: myHabits, index: indexPath)
             cell.checkBox.addTarget(cell, action: #selector(cell.tapChecked), for: .touchUpInside)
-            
-            cell.titleLable.text = myHabits.name
-            cell.titleLable.textColor = myHabits.color
-            cell.dateLable.text = myHabits.dateString
-            cell.checkBox.tintColor = myHabits.color
-            cell.countLable.text = "Подряд: "
+            cell.delegateUpdate = self
+//            cell.titleLable.text = myHabits.name
+//            cell.titleLable.textColor = myHabits.color
+//            cell.dateLable.text = myHabits.dateString
+//            cell.checkBox.tintColor = myHabits.color
+//            cell.countLable.text = "Подряд: "
 
+    
             if cell.isChecked == true  {
-                HabitsStore.shared.track(myHabits)
+                HabitsStore.shared.track(habit)
      
             }
             
-            if myHabits.isAlreadyTakenToday {
+            if habit.isAlreadyTakenToday {
                 cell.checkBox.isEnabled = false
             } else {
                 cell.isChecked = false
@@ -152,6 +156,7 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout, UICollection
             return
         default:
             let myHabits: HabitsStore = .shared
+         //  let cell = collectionView.cellForItem(at: indexPath)
             let vc = HabitDetailsViewController(date: myHabits, index: indexPath)
             navigationController?.pushViewController(vc, animated: true)
 

@@ -11,11 +11,9 @@ import UIKit
 
 class HabitDetailsViewController: UIViewController {
 
-
     let date: HabitsStore
     let indexP: IndexPath
-    
-    
+        
     init(date: HabitsStore, index: IndexPath) {
         self.date = date
         self.indexP = index
@@ -46,13 +44,10 @@ class HabitDetailsViewController: UIViewController {
         
         navigationController?.navigationBar.tintColor = UIColor(named: "Purple")
         
-
-
+        title = date.habits[indexP.item].name
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
-
     }
 
     
