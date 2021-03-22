@@ -7,16 +7,19 @@
 
 import UIKit
 
-
+protocol UpdateTitleDelegate: class {
+    func updateTitle(title: String)
+}
 
 class HabitDetailsViewController: UIViewController {
 
     let date: HabitsStore
-    let indexP: IndexPath
+    let cellColletion: AddedHabitsCollectionViewCell
+    var habit: HabitsStore?
         
-    init(date: HabitsStore, index: IndexPath) {
+    init(date: HabitsStore, cell: AddedHabitsCollectionViewCell) {
         self.date = date
-        self.indexP = index
+        self.cellColletion = cell
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -44,7 +47,7 @@ class HabitDetailsViewController: UIViewController {
         
         navigationController?.navigationBar.tintColor = UIColor(named: "Purple")
         
-        title = date.habits[indexP.item].name
+        title = cellColletion.titleLable.text
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -58,14 +61,15 @@ class HabitDetailsViewController: UIViewController {
     }
     
     @objc private func editHabits(){
-        let vc = HabitViewController(index: indexP)
+        let vc = HabitViewController(cell: cellColletion)
         guard let controller = vc else {return}
+        guard let date = cellColletion.date else { return }
         controller.removeHabit = self
-        
+        controller.updateTitle = self
         let navController = UINavigationController(rootViewController: controller)
-        controller.titleTextField.text = date.habits[indexP.item].name
-        controller.colorView.backgroundColor = date.habits[indexP.item].color
-        controller.datePicker.date = date.habits[indexP.item].date
+        controller.titleTextField.text = cellColletion.titleLable.text
+        controller.colorView.backgroundColor = cellColletion.checkBox.tintColor
+        controller.datePicker.date = date
         
         controller.title = "Править"
         controller.deleteButton.isHidden = false
@@ -101,35 +105,30 @@ extension HabitDetailsViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: HabitsDetailsTableViewCell = tableView.dequeueReusableCell(withIdentifier: String(describing: HabitsDetailsTableViewCell.self)) as! HabitsDetailsTableViewCell
-        
-        let indexCheck = date.trackDateString(forIndex: indexPath.row)
 
-        let formatter = DateFormatter()
-        formatter.dateFormat = "d MMMM, yyyy"
-        formatter.locale = Locale(identifier: "ru_RU")
-        
-        cell.textLabel?.text =  indexCheck
-        
-        if date.habit(date.habits[indexP.row], isTrackedIn: date.habits[indexP.row].date)  == false{ // Если передаю обычный indexPath, приложение крашится
-            cell.accessoryType = .none
-
-        } else {
-            cell.accessoryType = .checkmark
-            cell.tintColor = UIColor(named: "Purple")
-        }
+        cell.textLabel?.text =  date.trackDateString(forIndex: indexPath.row)
+            
+        if date.habit(date.habits[cellColletion.tag], isTrackedIn:  date.dates[indexPath.row])  == false{
+                cell.accessoryType = .none
+            } else {
+                cell.accessoryType = .checkmark
+                cell.tintColor = UIColor(named: "Purple")
+            }
         
         return cell
-    }
-    
-    
+
+        }
+  
 }
 
-extension HabitDetailsViewController: DeleteDelegate {
+extension HabitDetailsViewController: DeleteDelegate, UpdateTitleDelegate {
+    func updateTitle(title: String) {
+        self.title = title
+    }
+    
 
     func removeHabit() {
-        let vc = HabitsViewController()
         self.navigationController?.popViewController(animated: true)
-        vc.collectionView.reloadData()
         print("delete")
     }
     

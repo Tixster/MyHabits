@@ -21,14 +21,14 @@ protocol UpdateDelegate: class {
 
 class HabitViewController: UIViewController {
     
-    private let indexPath: IndexPath?
+    private let cellCollection: AddedHabitsCollectionViewCell?
     weak var addHabit: AddDelegate?
     weak var removeHabit: DeleteDelegate?
     weak var updateHabit: UpdateDelegate?
-    
-
-    init?(index: IndexPath?){
-        self .indexPath = index
+    weak var updateTitle: UpdateTitleDelegate?
+        
+    init?(cell: AddedHabitsCollectionViewCell?){
+        self.cellCollection = cell
         super.init(nibName: nil, bundle: nil)
 
     }
@@ -123,7 +123,6 @@ class HabitViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupContent()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -132,6 +131,7 @@ class HabitViewController: UIViewController {
         let saveHabitsButton =  UIBarButtonItem.init(title: "Сохранить", style: .done, target: self, action: #selector(saveHabits))
         let cancelHabitsButton =  UIBarButtonItem.init(title: "Отменить", style: .done, target: self, action: #selector(cancelHabits))
 
+        
         navigationItem.rightBarButtonItem = saveHabitsButton
         saveHabitsButton.tintColor = UIColor(named: "Purple")
 
@@ -142,8 +142,8 @@ class HabitViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if let indexPath = indexPath {
-        let vc = HabitDetailsViewController(date: HabitsStore.shared, index: indexPath)
+        if let cell = cellCollection {
+        let vc = HabitDetailsViewController(date: HabitsStore.shared, cell: cell)
         vc.title = self.titleTextField.text
         }
     }
@@ -166,11 +166,13 @@ class HabitViewController: UIViewController {
             print("Отмена") }
         let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { [weak self] _ in
             guard let self = self else {return}
-            guard let index = self.indexPath else {return}
+            guard let cell = self.cellCollection else {return}
             let habit = HabitsStore.shared
-            habit.habits.remove(at: index.item)
+            habit.habits.remove(at: cell.tag)
+
             self.dismiss(animated: true){ [weak self] in
                 guard let self = self else {return}
+                
                 self.removeHabit?.removeHabit()
             }
         }
@@ -186,26 +188,27 @@ class HabitViewController: UIViewController {
     }
     
     @objc private func saveHabits(){
-        let newHabit = Habit(name: titleTextField.text!, date: datePicker.date, color: colorView.backgroundColor!)
+        guard let textField = titleTextField.text else { return }
+        
+        let newHabit = Habit(name: textField, date: datePicker.date, color: colorView.backgroundColor!)
         let store = HabitsStore.shared
         
-        if indexPath == nil {
-        store.habits.insert(newHabit, at: 0)
-        } else {
-            if let indexPath = indexPath {
-                store.habits[indexPath.item].name = titleTextField.text!
-                store.habits[indexPath.item].date = datePicker.date
-                store.habits[indexPath.item].color = colorView.backgroundColor!
-                print("Edit")
-                self.dismiss(animated: true) { [weak self] in
-                    guard let self = self else {return}
-
-                    self.updateHabit?.updateColletion()
-                }
+        if cellCollection == nil {
+            store.habits.insert(newHabit, at: 0)
+            self.dismiss(animated: true)
+            addHabit?.addHabit()
+        } else if let cell = cellCollection {
+            store.habits[cell.tag].name = textField
+            store.habits[cell.tag].date = datePicker.date
+            store.habits[cell.tag].color = colorView.backgroundColor!
+            self.updateHabit?.updateColletion()
+            print("Edit")
+            self.dismiss(animated: true) { [weak self] in
+                guard let self = self else {return}
+                self.updateTitle?.updateTitle(title: self.titleTextField.text!)
             }
         }
-        self.dismiss(animated: true)
-        addHabit?.addHabit()
+
     }
     
     @objc private func cancelHabits(){

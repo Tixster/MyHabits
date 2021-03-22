@@ -60,6 +60,8 @@ class AddedHabitsCollectionViewCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    var date: Date?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -81,6 +83,8 @@ class AddedHabitsCollectionViewCell: UICollectionViewCell {
         dateLable.text = habit.dateString
         checkBox.tintColor = habit.color
         countLable.text = "Подряд: "
+        date = habit.date
+
     }
     
     @objc func tapChecked(){

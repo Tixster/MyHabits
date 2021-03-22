@@ -33,6 +33,8 @@ class HabitsViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.rightBarButtonItem = addHabitsButton
         addHabitsButton.tintColor = UIColor(named: "Purple")
+        
+        collectionView.reloadData()
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -43,10 +45,7 @@ class HabitsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let vc = HabitViewController(index: nil)
-        guard let controller = vc else {  return }
-        controller.updateHabit = self
-        
+ 
         setupCV()
         view.backgroundColor = .white
     }
@@ -64,7 +63,7 @@ class HabitsViewController: UIViewController {
     }
     
     @objc private func addHabits(){
-        let vc = HabitViewController(index: nil)
+        let vc = HabitViewController(cell: nil)
         guard let controller = vc else {  return }
         controller.addHabit = self
         let nav = UINavigationController(rootViewController: controller)
@@ -72,9 +71,7 @@ class HabitsViewController: UIViewController {
         controller.title = "Создать"
  
     }
-    
 }
-
 
 extension HabitsViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     
@@ -107,7 +104,7 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout, UICollection
         case 0:
             return 1
         default:
-            return HabitsStore.shared.habits.count
+            return myHabits.habits.count
         }
     }
     
@@ -116,8 +113,7 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout, UICollection
         switch indexPath.section {
         case 0:
             let cell: ProgressCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: ProgressCollectionViewCell.self), for: indexPath) as! ProgressCollectionViewCell
-                
-
+        
             return cell
         default:
             let cell: AddedHabitsCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: AddedHabitsCollectionViewCell.self), for: indexPath) as! AddedHabitsCollectionViewCell
@@ -126,25 +122,17 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout, UICollection
             cell.setupCellHabit(habits: myHabits, index: indexPath)
             cell.checkBox.addTarget(cell, action: #selector(cell.tapChecked), for: .touchUpInside)
             cell.delegateUpdate = self
-//            cell.titleLable.text = myHabits.name
-//            cell.titleLable.textColor = myHabits.color
-//            cell.dateLable.text = myHabits.dateString
-//            cell.checkBox.tintColor = myHabits.color
-//            cell.countLable.text = "Подряд: "
-
-    
+            
             if cell.isChecked == true  {
                 HabitsStore.shared.track(habit)
-     
             }
-            
             if habit.isAlreadyTakenToday {
                 cell.checkBox.isEnabled = false
             } else {
                 cell.isChecked = false
                 cell.checkBox.isEnabled = true
             }
-        
+
             return cell
         }
         
@@ -155,12 +143,13 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout, UICollection
         case 0:
             return
         default:
-            let myHabits: HabitsStore = .shared
-         //  let cell = collectionView.cellForItem(at: indexPath)
-            let vc = HabitDetailsViewController(date: myHabits, index: indexPath)
+            let cell = collectionView.cellForItem(at: indexPath) as! AddedHabitsCollectionViewCell
+            cell.tag = indexPath.item
+            let vc = HabitDetailsViewController(date: myHabits, cell: cell)
             navigationController?.pushViewController(vc, animated: true)
 
-            vc.title = HabitsStore.shared.habits[indexPath.item].name
+            let habitVc = HabitViewController(cell: cell)
+            habitVc?.updateHabit = self
         }
     }
 
@@ -175,6 +164,7 @@ extension HabitsViewController: AddDelegate, UpdateDelegate {
     
     func addHabit() {
         self.collectionView.reloadData()
+        
         print("added")
     }
     
