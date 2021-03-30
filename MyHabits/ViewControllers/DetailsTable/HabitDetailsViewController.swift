@@ -13,13 +13,14 @@ protocol UpdateTitleDelegate: class {
 
 class HabitDetailsViewController: UIViewController {
 
-    let date: HabitsStore
+    let date: HabitsStore = .shared
     let cellColletion: AddedHabitsCollectionViewCell
-    var habit: HabitsStore?
+    var habitCell: Habit?
         
     init(date: HabitsStore, cell: AddedHabitsCollectionViewCell) {
-        self.date = date
+        self.date.habits = date.habits
         self.cellColletion = cell
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -46,7 +47,7 @@ class HabitDetailsViewController: UIViewController {
         navigationItem.rightBarButtonItem = editHabitsButton
         
         navigationController?.navigationBar.tintColor = UIColor(named: "Purple")
-        
+        print("Open")
         title = cellColletion.titleLable.text
     }
     override func viewWillDisappear(_ animated: Bool) {
@@ -106,9 +107,11 @@ extension HabitDetailsViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: HabitsDetailsTableViewCell = tableView.dequeueReusableCell(withIdentifier: String(describing: HabitsDetailsTableViewCell.self)) as! HabitsDetailsTableViewCell
 
-        cell.textLabel?.text =  date.trackDateString(forIndex: indexPath.row)
-            
-        if date.habit(date.habits[cellColletion.tag], isTrackedIn:  date.dates[indexPath.row])  == false{
+        guard let habit = habitCell else { return cell }
+        cell.textLabel?.text = date.trackDateString(forIndex: indexPath.row)
+
+        
+        if date.habit(habit, isTrackedIn: date.dates[indexPath.row])  == false{
                 cell.accessoryType = .none
             } else {
                 cell.accessoryType = .checkmark

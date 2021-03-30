@@ -11,15 +11,7 @@ class AddedHabitsCollectionViewCell: UICollectionViewCell {
     
     var delegateUpdate: UpdateDelegate?
     
-    var isChecked = false {
-        didSet {
-            if isChecked {
-                checkBox.setImage(UIImage(named: "circle.check")?.withRenderingMode(.alwaysTemplate), for: .normal)
-            } else {
-                checkBox.setImage(UIImage(named: "circle")?.withRenderingMode(.alwaysTemplate), for: .normal)
-            }
-        }
-    }
+    var isChecked = false
     
     let checkBox: UIButton = {
        let button = UIButton()
@@ -84,11 +76,11 @@ class AddedHabitsCollectionViewCell: UICollectionViewCell {
         checkBox.tintColor = habit.color
         countLable.text = "Подряд: "
         date = habit.date
-
     }
     
     @objc func tapChecked(){
-        isChecked = true
+        isChecked.toggle()
+        checkBox.setImage(UIImage(named: "circle.check")?.withRenderingMode(.alwaysTemplate), for: .normal)
         self.delegateUpdate?.updateColletion()
                 }
 

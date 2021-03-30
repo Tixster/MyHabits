@@ -122,14 +122,17 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout, UICollection
             cell.setupCellHabit(habits: myHabits, index: indexPath)
             cell.checkBox.addTarget(cell, action: #selector(cell.tapChecked), for: .touchUpInside)
             cell.delegateUpdate = self
-            
-            if cell.isChecked == true  {
+
+            if cell.isChecked {
                 HabitsStore.shared.track(habit)
             }
+            
             if habit.isAlreadyTakenToday {
                 cell.checkBox.isEnabled = false
+
             } else {
                 cell.isChecked = false
+                cell.checkBox.setImage(UIImage(named: "circle")?.withRenderingMode(.alwaysTemplate), for: .normal)
                 cell.checkBox.isEnabled = true
             }
 
@@ -145,9 +148,13 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout, UICollection
         default:
             let cell = collectionView.cellForItem(at: indexPath) as! AddedHabitsCollectionViewCell
             cell.tag = indexPath.item
+            
+            let habitCell = myHabits.habits[indexPath.item]
             let vc = HabitDetailsViewController(date: myHabits, cell: cell)
             navigationController?.pushViewController(vc, animated: true)
-
+            vc.habitCell = habitCell
+            
+            
             let habitVc = HabitViewController(cell: cell)
             habitVc?.updateHabit = self
         }

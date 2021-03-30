@@ -194,7 +194,8 @@ class HabitViewController: UIViewController {
         let store = HabitsStore.shared
         
         if cellCollection == nil {
-            store.habits.insert(newHabit, at: 0)
+           store.habits.insert(newHabit, at: 0)
+            
             self.dismiss(animated: true)
             addHabit?.addHabit()
         } else if let cell = cellCollection {
@@ -203,10 +204,9 @@ class HabitViewController: UIViewController {
             store.habits[cell.tag].color = colorView.backgroundColor!
             self.updateHabit?.updateColletion()
             print("Edit")
-            self.dismiss(animated: true) { [weak self] in
-                guard let self = self else {return}
-                self.updateTitle?.updateTitle(title: self.titleTextField.text!)
-            }
+            self.updateTitle?.updateTitle(title: self.titleTextField.text!)
+
+            self.dismiss(animated: true)
         }
 
     }
