@@ -8,7 +8,7 @@
 import UIKit
 
 protocol AddDelegate: class {
-   func addHabit()
+    func addHabit()
 }
 
 protocol DeleteDelegate: class {
@@ -21,16 +21,16 @@ protocol UpdateDelegate: class {
 
 class HabitViewController: UIViewController {
     
-    private let cellCollection: AddedHabitsCollectionViewCell?
+    private let habit: Habit?
     weak var addHabit: AddDelegate?
     weak var removeHabit: DeleteDelegate?
     weak var updateHabit: UpdateDelegate?
     weak var updateTitle: UpdateTitleDelegate?
-        
-    init?(cell: AddedHabitsCollectionViewCell?){
-        self.cellCollection = cell
+    
+    init?(habit: Habit?){
+        self.habit = habit
         super.init(nibName: nil, bundle: nil)
-
+        
     }
     
     required init?(coder: NSCoder) {
@@ -45,7 +45,7 @@ class HabitViewController: UIViewController {
     }()
     
     private let picker = UIColorPickerViewController()
-
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "НАЗВАНИЕ"
@@ -54,8 +54,8 @@ class HabitViewController: UIViewController {
         
         return label
     }()
-
-     var titleTextField: UITextField = {
+    
+    var titleTextField: UITextField = {
         let titleTextField = UITextField()
         titleTextField.attributedPlaceholder = NSAttributedString(string: "Бегать по утрам, спать по 8 часов и т.п.", attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray2, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 13, weight: .regular)])
         
@@ -78,7 +78,7 @@ class HabitViewController: UIViewController {
         view.backgroundColor = .systemOrange
         view.layer.cornerRadius = 30 / 2
         view.translatesAutoresizingMaskIntoConstraints = false
-  
+        
         return view
     }()
     
@@ -130,22 +130,22 @@ class HabitViewController: UIViewController {
         
         let saveHabitsButton =  UIBarButtonItem.init(title: "Сохранить", style: .done, target: self, action: #selector(saveHabits))
         let cancelHabitsButton =  UIBarButtonItem.init(title: "Отменить", style: .done, target: self, action: #selector(cancelHabits))
-
+        
         
         navigationItem.rightBarButtonItem = saveHabitsButton
         saveHabitsButton.tintColor = UIColor(named: "Purple")
-
+        
         navigationItem.leftBarButtonItem = cancelHabitsButton
         cancelHabitsButton.tintColor = UIColor(named: "Purple")
-
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if let cell = cellCollection {
-        let vc = HabitDetailsViewController(date: HabitsStore.shared, cell: cell)
+        
+        let vc = HabitDetailsViewController(date: HabitsStore.shared)
         vc.title = self.titleTextField.text
-        }
+        
     }
     
     @objc private func selectColor(){
@@ -154,7 +154,7 @@ class HabitViewController: UIViewController {
         picker.delegate = self
         present(picker, animated: true, completion: nil)
     }
-
+    
     @objc private func dateChange(){
         getDateFromPicker()
     }
@@ -166,10 +166,13 @@ class HabitViewController: UIViewController {
             print("Отмена") }
         let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { [weak self] _ in
             guard let self = self else {return}
-            guard let cell = self.cellCollection else {return}
-            let habit = HabitsStore.shared
-            habit.habits.remove(at: cell.tag)
-
+            guard let habit = self.habit else {return}
+            let habits = HabitsStore.shared
+            
+            if let index = habits.habits.firstIndex(of: habit) {
+                habits.habits.remove(at: index)
+            }
+            
             self.dismiss(animated: true){ [weak self] in
                 guard let self = self else {return}
                 
@@ -193,22 +196,22 @@ class HabitViewController: UIViewController {
         let newHabit = Habit(name: textField, date: datePicker.date, color: colorView.backgroundColor!)
         let store = HabitsStore.shared
         
-        if cellCollection == nil {
-           store.habits.insert(newHabit, at: 0)
+        if habit == nil {
+            store.habits.insert(newHabit, at: 0)
             
             self.dismiss(animated: true)
             addHabit?.addHabit()
-        } else if let cell = cellCollection {
-            store.habits[cell.tag].name = textField
-            store.habits[cell.tag].date = datePicker.date
-            store.habits[cell.tag].color = colorView.backgroundColor!
+        } else if let habit = habit {
+            habit.name = textField
+            habit.date = datePicker.date
+            habit.color = colorView.backgroundColor!
             self.updateHabit?.updateColletion()
             print("Edit")
             self.updateTitle?.updateTitle(title: self.titleTextField.text!)
-
+            
             self.dismiss(animated: true)
         }
-
+        
     }
     
     @objc private func cancelHabits(){
@@ -238,7 +241,7 @@ class HabitViewController: UIViewController {
             
             titleColor.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 15),
             titleColor.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-
+            
             colorView.topAnchor.constraint(equalTo: titleColor.bottomAnchor, constant: 7),
             colorView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
             colorView.widthAnchor.constraint(equalToConstant: 30),

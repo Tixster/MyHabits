@@ -63,7 +63,7 @@ class HabitsViewController: UIViewController {
     }
     
     @objc private func addHabits(){
-        let vc = HabitViewController(cell: nil)
+        let vc = HabitViewController(habit: nil)
         guard let controller = vc else {  return }
         controller.addHabit = self
         let nav = UINavigationController(rootViewController: controller)
@@ -118,21 +118,18 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout, UICollection
         default:
             let cell: AddedHabitsCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: AddedHabitsCollectionViewCell.self), for: indexPath) as! AddedHabitsCollectionViewCell
             let habit = myHabits.habits[indexPath.item]
-            
-            cell.setupCellHabit(habits: myHabits, index: indexPath)
+            cell.haibt = habit
+            cell.setupCellHabit()
+
             cell.checkBox.addTarget(cell, action: #selector(cell.tapChecked), for: .touchUpInside)
             cell.delegateUpdate = self
 
-            if cell.isChecked {
-                HabitsStore.shared.track(habit)
-            }
-            
             if habit.isAlreadyTakenToday {
+                cell.checkBox.setImage(UIImage(named: "circle.check")?.withRenderingMode(.alwaysTemplate), for: .normal)
                 cell.checkBox.isEnabled = false
-
             } else {
-                cell.isChecked = false
                 cell.checkBox.setImage(UIImage(named: "circle")?.withRenderingMode(.alwaysTemplate), for: .normal)
+                cell.isChecked = false
                 cell.checkBox.isEnabled = true
             }
 
@@ -150,12 +147,11 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout, UICollection
             cell.tag = indexPath.item
             
             let habitCell = myHabits.habits[indexPath.item]
-            let vc = HabitDetailsViewController(date: myHabits, cell: cell)
+            let vc = HabitDetailsViewController(date: myHabits)
             navigationController?.pushViewController(vc, animated: true)
             vc.habitCell = habitCell
             
-            
-            let habitVc = HabitViewController(cell: cell)
+            let habitVc = HabitViewController(habit: habitCell)
             habitVc?.updateHabit = self
         }
     }
@@ -167,7 +163,6 @@ extension HabitsViewController: AddDelegate, UpdateDelegate {
         self.collectionView.reloadData()
         print("update")
     }
-    
     
     func addHabit() {
         self.collectionView.reloadData()

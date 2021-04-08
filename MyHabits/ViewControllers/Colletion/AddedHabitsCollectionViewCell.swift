@@ -10,24 +10,25 @@ import UIKit
 class AddedHabitsCollectionViewCell: UICollectionViewCell {
     
     var delegateUpdate: UpdateDelegate?
+    var haibt: Habit?
     
     var isChecked = false
     
     let checkBox: UIButton = {
-       let button = UIButton()
-        button.setImage(UIImage(named: "circle.check")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        let button = UIButton()
+        button.setImage(UIImage(named: "circle")?.withRenderingMode(.alwaysTemplate), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
- 
-     let bgView: UIView = {
+    
+    let bgView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-     let titleLable: UILabel = {
+    let titleLable: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         label.textColor = UIColor(named: "Blue")
@@ -36,7 +37,7 @@ class AddedHabitsCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-     let dateLable: UILabel = {
+    let dateLable: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         label.textColor = .systemGray
@@ -44,7 +45,7 @@ class AddedHabitsCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-     let countLable: UILabel = {
+    let countLable: UILabel = {
         let label = UILabel()
         label.text = "Подряд: "
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
@@ -54,22 +55,20 @@ class AddedHabitsCollectionViewCell: UICollectionViewCell {
     }()
     
     var date: Date?
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.layer.masksToBounds = true
         contentView.layer.cornerRadius = 8
         setupContetn()
-        
-        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-   
-    func setupCellHabit(habits: HabitsStore, index: IndexPath){
-        let habit = habits.habits[index.item]
+    
+    func setupCellHabit(){
+        guard let habit = haibt else { return }
         titleLable.text = habit.name
         titleLable.textColor = habit.color
         dateLable.text = habit.dateString
@@ -80,10 +79,11 @@ class AddedHabitsCollectionViewCell: UICollectionViewCell {
     
     @objc func tapChecked(){
         isChecked.toggle()
-        checkBox.setImage(UIImage(named: "circle.check")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        guard let habit = haibt else { return }
+        HabitsStore.shared.track(habit)
         self.delegateUpdate?.updateColletion()
-                }
-
+    }
+    
     private func setupContetn(){
         contentView.addSubview(bgView)
         bgView.addSubview(titleLable)

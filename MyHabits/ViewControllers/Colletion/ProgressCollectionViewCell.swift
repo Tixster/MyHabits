@@ -80,10 +80,6 @@ class ProgressCollectionViewCell: UICollectionViewCell {
             progressView.leadingAnchor.constraint(equalTo: bgView.leadingAnchor, constant: 12),
             progressView.trailingAnchor.constraint(equalTo: bgView.trailingAnchor, constant: -12),
             progressView.bottomAnchor.constraint(equalTo: bgView.bottomAnchor, constant: -15),
-            
-            
         ])
-
     }
-    
 }
