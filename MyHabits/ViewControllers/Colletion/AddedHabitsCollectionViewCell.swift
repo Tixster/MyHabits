@@ -67,7 +67,7 @@ class AddedHabitsCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupCellHabit(index: IndexPath){
+    func setupCellHabit(){
         guard let habit = habit else { return }
         titleLable.text = habit.name
         titleLable.textColor = habit.color
