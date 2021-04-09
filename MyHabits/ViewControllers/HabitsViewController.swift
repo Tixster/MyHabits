@@ -118,8 +118,8 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout, UICollection
         default:
             let cell: AddedHabitsCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: AddedHabitsCollectionViewCell.self), for: indexPath) as! AddedHabitsCollectionViewCell
             let habit = myHabits.habits[indexPath.item]
-            cell.haibt = habit
-            cell.setupCellHabit()
+            cell.habit = habit
+            cell.setupCellHabit(index: indexPath)
 
             cell.checkBox.addTarget(cell, action: #selector(cell.tapChecked), for: .touchUpInside)
             cell.delegateUpdate = self

@@ -10,7 +10,7 @@ import UIKit
 class AddedHabitsCollectionViewCell: UICollectionViewCell {
     
     var delegateUpdate: UpdateDelegate?
-    var haibt: Habit?
+    var habit: Habit?
     
     var isChecked = false
     
@@ -47,7 +47,7 @@ class AddedHabitsCollectionViewCell: UICollectionViewCell {
     
     let countLable: UILabel = {
         let label = UILabel()
-        label.text = "Подряд: "
+        
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         label.textColor = .systemGray2
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -67,19 +67,20 @@ class AddedHabitsCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupCellHabit(){
-        guard let habit = haibt else { return }
+    func setupCellHabit(index: IndexPath){
+        guard let habit = habit else { return }
         titleLable.text = habit.name
         titleLable.textColor = habit.color
         dateLable.text = habit.dateString
         checkBox.tintColor = habit.color
-        countLable.text = "Подряд: "
+        countLable.text = "Подряд: \(habit.trackDates.count)"
         date = habit.date
+
     }
     
     @objc func tapChecked(){
         isChecked.toggle()
-        guard let habit = haibt else { return }
+        guard let habit = habit else { return }
         HabitsStore.shared.track(habit)
         self.delegateUpdate?.updateColletion()
     }
